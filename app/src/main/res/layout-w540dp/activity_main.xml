@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btnEnable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="lockPhone"
+        android:text="enable">
+
+    </Button>
+    <Button
+        android:layout_toEndOf="@id/btnEnable"
+        android:id="@+id/btnLock"
+        android:text="enable"
+        android:onClick= "enablePhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </Button>
+</RelativeLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/StageSideProject/TestSleep/app/src/main/res/layout-w540dp/activity_main.xml" value="0.264" />
+        <entry key="..\:/StageSideProject/TestSleep/app/src/main/res/layout-w540dp/activity_wake_up.xml" value="0.19166666666666668" />
+        <entry key="..\:/StageSideProject/TestSleep/app/src/main/res/layout/activity_details.xml" value="0.17300724637681159" />
+        <entry key="..\:/StageSideProject/TestSleep/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
+        <entry key="..\:/StageSideProject/TestSleep/app/src/main/res/layout/activity_wake_up.xml" value="0.16666666666666666" />
+        <entry key="..\:/StageSideProject/TestSleep/app/src/main/res/xml/policies.xml" value="0.13020833333333334" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
