@@ -9,6 +9,7 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,9 +26,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Calendar;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /*
  * Main Activity class that loads {@link MainFragment}.
@@ -39,6 +46,8 @@ public class MainActivity extends FragmentActivity {
     Button btnEnable, btnLock;
     PowerManager.WakeLock wakeLock;
     PowerManager.WakeLock mWakeLock;
+    Timer timer;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -83,6 +92,9 @@ public class MainActivity extends FragmentActivity {
 
             }
         }
+
+        timer = new Timer();
+
 
 /*        handler.postDelayed(new Runnable() {
             @Override
@@ -193,6 +205,21 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    public void updateApp(View view) {
+        Log.d("UPDATEBTN","update btn clicked");
+        String cmdInstall = "su -c pm install -r /data/local/tmp/app-release.apk";
+        String cmdLaunch = "su -c am start -a android.intent.action.MAIN -n com.example.testsleep/.MainActivity";
+
+        try {
+            Runtime.getRuntime().exec(cmdInstall);
+            Runtime.getRuntime().exec(cmdLaunch);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @SuppressLint("InvalidWakeLockTag")
     public void lockPhone(View view) {
        PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
@@ -202,11 +229,11 @@ public class MainActivity extends FragmentActivity {
         AlarmManager alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         Intent inten = new Intent(getApplicationContext(), WakeUpActivity.class);
         PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, inten, 0);
-
+        runPatientTaskPeriord();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 15);
-        calendar.set(Calendar.MINUTE, 04);
+        calendar.set(Calendar.MINUTE, 07);
         alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pi);
 
      //   alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+600000, pi);
@@ -250,6 +277,25 @@ public class MainActivity extends FragmentActivity {
     }
 
 
+    public void runPatientTaskPeriord() {
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+
+                this.cancel();  // cancel this task to run new task
+                Log.d("SLEEPINGAPI","WORKING");
+                runPatientTaskPeriord();
+
+            }
+        };
+
+        timer.schedule(task, 3000, 3000);
+        int countDeletedTasks = timer.purge(); // remove cancel task from timer
+
+    }
+
+
     @Override
     protected void onActivityResult ( int requestCode , int resultCode , @Nullable Intent
             data) {
@@ -264,6 +310,52 @@ public class MainActivity extends FragmentActivity {
                             Toast. LENGTH_SHORT ).show() ;
                 }
                 return;
+        }
+    }
+
+    public static boolean installPackage(Context context, InputStream in, String packageName)
+            throws IOException {
+        PackageInstaller packageInstaller = context.getPackageManager().getPackageInstaller();
+        PackageInstaller.SessionParams params = new PackageInstaller.SessionParams(
+                PackageInstaller.SessionParams.MODE_FULL_INSTALL);
+        params.setAppPackageName(packageName);
+        // set params
+        int sessionId = packageInstaller.createSession(params);
+        PackageInstaller.Session session = packageInstaller.openSession(sessionId);
+        OutputStream out = session.openWrite("COSU", 0, -1);
+        byte[] buffer = new byte[65536];
+        int c;
+        while ((c = in.read(buffer)) != -1) {
+            out.write(buffer, 0, c);
+        }
+        session.fsync(out);
+        in.close();
+        out.close();
+
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra("info", "somedata");  // for extra data if needed..
+
+        Random generator = new Random();
+
+        PendingIntent i = PendingIntent.getActivity(context, generator.nextInt(), intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        session.commit(i.getIntentSender());
+
+
+        return true;
+    }
+
+    public static void InstallAPK(String filename){
+        File file = new File(filename);
+        if(file.exists()){
+            try {
+                String command;
+               // filename = StringUtil.insertEscape(filename);
+                command = "adb install -r " + filename;
+                Process proc = Runtime.getRuntime().exec(new String[] { "su", "-c", command });
+                proc.waitFor();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

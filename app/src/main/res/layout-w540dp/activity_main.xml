@@ -22,4 +22,25 @@
         android:layout_height="wrap_content">
 
     </Button>
+
+    <Button
+        android:id="@+id/btnUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/btnLock"
+        android:onClick="updateApp"
+        android:text="update">
+
+    </Button>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/btnUpdate"
+        android:text="app updated ok!"
+        android:textColor="#000000"
+        android:textSize="30dp">
+
+    </TextView>
+
 </RelativeLayout>

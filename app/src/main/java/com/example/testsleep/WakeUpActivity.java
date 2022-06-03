@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class WakeUpActivity extends FragmentActivity {
     PowerManager.WakeLock mWakeLock;
 
@@ -35,4 +38,8 @@ public class WakeUpActivity extends FragmentActivity {
 
         }
     }
+
+
+
+
 }
